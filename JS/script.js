@@ -1,91 +1,64 @@
-/* Задание на урок:
+// 1) Создайте функцию, которая принимает в себя целое число минут и возвращает время в нужном формате строки. (Смотри пример). Обратите внимание на окончание слова "час" - оно меняется в зависимости от цифры. Если вместо аргумента приходит не число, дробное или отрицательное число - функция возвращает строку "Ошибка, проверьте данные"
 
-1) Первую часть задания повторить по уроку
+// Внимание! Давайте пока ограничимся максимум 600ю минутами (10 часов). Так как проверки на большие числа будут раздувать код (33 часа, 31 час, 11 часов и тд). Этого будет достаточно и код будет проверять именно этот промежуток (1 - 10 часов). Но вы можете реализовать и полный скрипт, он тоже должен проходить тесты.
 
-2) Создать функцию showMyDB, которая будет проверять свойство privat. Если стоит в позиции
-false - выводит в консоль главный объект программы
+// Пример:
 
-3) Создать функцию writeYourGenres в которой пользователь будет 3 раза отвечать на вопрос 
-"Ваш любимый жанр под номером ${номер по порядку}". Каждый ответ записывается в массив данных
-genres
+// getTimeFromMinutes(150) => "Это 2 часа и 30 минут"
 
-P.S. Функции вызывать не обязательно*/
+// getTimeFromMinutes(50) => "Это 0 часов и 50 минут"
 
-"use strict";
+// getTimeFromMinutes(0) => "Это 0 часов и 0 минут"
 
-// Код возьмите из предыдущего домашнего задания
+// getTimeFromMinutes(-150) => "Ошибка, проверьте данные"
 
-let numberOfFilms;
+// 2) Напишите функцию, которая принимает в себя 4 числа и возвращает самое большее из них. Если один из аргументов не является числом или их меньше 4 - возвращается 0. Дробные числа разрешены.
 
-function start() {
-  numberOfFilms = +prompt("Сколько фильмов вы уже посмотрели?");
+// Пример:
 
-  while (
-    numberOfFilms == "" ||
-    numberOfFilms === null ||
-    isNaN(numberOfFilms)
+// findMaxNumber(1, 5, 6.6, 11); =>  11
+
+// findMaxNumber(1, 5, '6', '10');  =>  0
+
+// Место для первой задачи
+function getTimeFromMinutes(num) {
+  while (typeof num !== "number" || num % 1 !== 0 || num < 0) {
+    return "Ошибка, проверьте данные";
+  }
+  const clock = Math.floor(num / 60);
+  const minutes = num % 60;
+  if (
+    (clock >= 11 && clock <= 20) ||
+    (clock >= 5 && clock <= 10) ||
+    clock === 0
   ) {
-    numberOfFilms = +prompt("Сколько фильмов вы уже посмотрели?");
-  }
-}
-
-start();
-
-const personalMovieDB = {
-  count: numberOfFilms,
-  movies: {},
-  actors: {},
-  genres: [],
-  privat: false,
-};
-
-function rememberMyFilms() {
-  for (let i = 0; i < 2; i++) {
-    const a = prompt("Один из последних просмотренных фильмов?");
-    const b = +prompt("На сколько оцените его?");
-    if (a != "" && a != null && a.length < 50 && b != "" && b != null) {
-      personalMovieDB.movies[a] = b;
-      console.log("done");
-    } else {
-      i--;
-      console.log("error");
-    }
-  }
-}
-
-rememberMyFilms();
-
-function detectPersonalLevel() {
-  if (personalMovieDB.count < 10) {
-    alert("Просмотрено довольно мало фильмов");
-  } else if (personalMovieDB.count < 30) {
-    alert("Вы классический зритель");
-  } else if (personalMovieDB.count > 30) {
-    alert("Вы киноман");
+    return `Это ${clock} часов и ${minutes} минут`;
+  } else if (clock === 1 || clock % 10 === 1) {
+    return `Это ${clock} час и ${minutes} минут`;
   } else {
-    alert("Произошла ошибка");
+    return `Это ${clock} часа и ${minutes} минут`;
   }
 }
 
-detectPersonalLevel();
+// 2) Напишите функцию, которая принимает в себя 4 числа и возвращает самое большее из них. Если один из аргументов не является числом или их меньше 4 - возвращается 0. Дробные числа разрешены.
 
-// personalMovieDB.movies[a] = b;
-function showMyDB() {
-  if (personalMovieDB.privat === false) {
-    console.log(personalMovieDB);
+// Пример:
+
+// findMaxNumber(1, 5, 6.6, 11); =>  11
+
+// findMaxNumber(1, 5, '6', '10');  =>  0
+// Место для второй задачи
+function findMaxNumber(num1, num2, num3, num4) {
+  if (
+    typeof num1 !== "number" ||
+    typeof num2 !== "number" ||
+    typeof num3 !== "number" ||
+    typeof num4 !== "number"
+  ) {
+    return 0;
+  } else {
+    return Math.max(num1, num2, num3, num4);
   }
 }
 
-showMyDB();
-
-// 3) Создать функцию writeYourGenres в которой пользователь будет 3 раза отвечать на вопрос
-// "Ваш любимый жанр под номером ${номер по порядку}". Каждый ответ записывается в массив данных
-// genres
-
-function writeYourGenres() {
-  for (let i = 1; i <= 3; i++) {
-    personalMovieDB.genres.push(prompt(`Ваш любимый жанр под номером ${i}`));
-  }
-}
-
-writeYourGenres();
+console.log(findMaxNumber(1, 5, 6.6, 11));
