@@ -1,75 +1,40 @@
-// 1) Напишите функцию showExperience, которая будет принимать в себя объект со всеми данными и возвращать строку с опытом.
+// 1) Напишите функцию showFamily, которая будет принимать в себя массив строк и возвращать сообщение в нужном формате.
+
+// showFamily(family)  => 'Семья состоит из: Peter Ann Alex Linda'
+
+// Имена подставляются автоматически из массива. Если массив пустой, то возвращается сообщение 'Семья пуста'
+
+// 2) напишите функцию standardizeStrings, которая будет принимать в себя массив строк и будет выводить в консоль эти строки в нижнем регистре.
 
 // Пример:
 
-// showExperience(personalPlanPeter) => '1 month'
+// standardizeStrings(favoriteCities)  выведет в консоль
 
-// P.S. желательно использовать деструктуризацию, но не обязательно
+// lisbon
+// rome
+// milan
+// dublin
 
-// 2) Напишите функцию showProgrammingLangs, которая будет принимать в себя объект со всеми данными и возвращать строку в нужном виде.
-
-// Пример:
-
-// showProgrammingLangs(personalPlanPeter)  =>
-
-// "Язык js изучен на 20% Язык php изучен на 10%"
-
-// Причем функция должна работать вне зависимости от количества языков. Если ни один не указан, то возвращается пустая строка.
-
-// P.S. Для переноса строки используется \n в конце строки.
-
-// 3) Создайте метод showAgeAndLangs внутри объекта personalPlanPeter. При его вызове метод будет принимать в себя объект и возвращать строку в нужном виде.
-
-// Пример:
-
-// personalPlanPeter.showAgeAndLangs(personalPlanPeter)
-
-// => 'Мне 29 и я владею языками: RU ENG'
-
-// Заметьте, что возраст и языки подставляются автоматически из объекта, а языки всегда в верхнем регистре (большими буквами). Если данные в объекте поменяются, то и сообщение тоже изменится.
-
-const personalPlanPeter = {
-  name: "Peter",
-  age: "40",
-  skills: {
-    languages: ["ble", "eng"],
-    programmingLangs: {
-      js: "20%",
-      php: "10%",
-    },
-    exp: "1 month",
-  },
-  showAgeAndLangs() {
-    return `Мне ${this.age} и я владею языками: ${this.skills.languages
-      .join(" ")
-      .toLocaleUpperCase()}`;
-  },
-};
-
-function showExperience(plan) {
-  let { exp } = plan.skills;
-  return exp;
-}
-
-function showProgrammingLangs(plan) {
-  let res = "";
-  for (let key in plan.skills.programmingLangs) {
-    res += `Язык ${key} изучен на ${plan.skills.programmingLangs[key]}\n`;
+const family = ["Peter", "Ann", "Alex", "Linda"];
+function showFamily(arr) {
+  let name = "";
+  for (const element of arr) {
+    name += ` ${element}`;
   }
-  return res;
+  if (name === "") {
+    return "Семья пуста";
+  }
+  return `Семья состоит из: ${name.trim()}`;
 }
 
-let { skill1, skill2, ...skillLang } =
-  personalPlanPeter.skills.programmingLangs;
+const favoriteCities = ["liSBon", "ROME", "miLan", "Dublin"];
 
-console.log(skillLang);
+function standardizeStrings(arr) {
+  for (let i = 0; i < arr.length; i++) {
+    const element = arr[i];
+    console.log(element.toLowerCase());
+  }
+}
 
-// let res = "";
-// for (let key in personalPlanPeter.skills.programmingLangs) {
-//   res += `Язык ${key}`;
-//   console.log(res);
-// }
-
-console.log(showProgrammingLangs(personalPlanPeter));
-
-console.log(personalPlanPeter.showAgeAndLangs());
+console.log(showFamily(family));
+standardizeStrings(favoriteCities);
