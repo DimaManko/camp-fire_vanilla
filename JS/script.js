@@ -1,30 +1,75 @@
-// Создайте функцию, которая будет принимать в себя один аргумент-целое положительное число. Она должна возвращать строку, в которой будут через пробел выведены числа Фибоначчи. Причем, их количество должно быть равно переданному аргументу.
-
-// Если переданный аргумент не число - вернуть пустую строку. Решать без применения рекурсии.
+// 1) Напишите функцию showExperience, которая будет принимать в себя объект со всеми данными и возвращать строку с опытом.
 
 // Пример:
 
-// fib(4) => "0 1 1 2"
+// showExperience(personalPlanPeter) => '1 month'
 
-// fib(7) => "0 1 1 2 3 5 8"
+// P.S. желательно использовать деструктуризацию, но не обязательно
 
-// fib('7') => ""
+// 2) Напишите функцию showProgrammingLangs, которая будет принимать в себя объект со всеми данными и возвращать строку в нужном виде.
 
-// fib(1) => "0"
+// Пример:
 
-// fib(0) => ""
+// showProgrammingLangs(personalPlanPeter)  =>
 
-function fib(n) {
-  if (n === 1) {
-    return "0";
-  } else if (typeof n !== "number" || n === 0 || !Number.isInteger(n)) {
-    return "";
-  } else {
-    let result = [0, 1];
-    for (let i = 2; i < n; i++) {
-      result.push(result[i - 1] + result[i - 2]);
-    }
-    return result.join(" ");
-  }
+// "Язык js изучен на 20% Язык php изучен на 10%"
+
+// Причем функция должна работать вне зависимости от количества языков. Если ни один не указан, то возвращается пустая строка.
+
+// P.S. Для переноса строки используется \n в конце строки.
+
+// 3) Создайте метод showAgeAndLangs внутри объекта personalPlanPeter. При его вызове метод будет принимать в себя объект и возвращать строку в нужном виде.
+
+// Пример:
+
+// personalPlanPeter.showAgeAndLangs(personalPlanPeter)
+
+// => 'Мне 29 и я владею языками: RU ENG'
+
+// Заметьте, что возраст и языки подставляются автоматически из объекта, а языки всегда в верхнем регистре (большими буквами). Если данные в объекте поменяются, то и сообщение тоже изменится.
+
+const personalPlanPeter = {
+  name: "Peter",
+  age: "40",
+  skills: {
+    languages: ["ble", "eng"],
+    programmingLangs: {
+      js: "20%",
+      php: "10%",
+    },
+    exp: "1 month",
+  },
+  showAgeAndLangs() {
+    return `Мне ${this.age} и я владею языками: ${this.skills.languages
+      .join(" ")
+      .toLocaleUpperCase()}`;
+  },
+};
+
+function showExperience(plan) {
+  let { exp } = plan.skills;
+  return exp;
 }
-console.log(fib(7));
+
+function showProgrammingLangs(plan) {
+  let res = "";
+  for (let key in plan.skills.programmingLangs) {
+    res += `Язык ${key} изучен на ${plan.skills.programmingLangs[key]}\n`;
+  }
+  return res;
+}
+
+let { skill1, skill2, ...skillLang } =
+  personalPlanPeter.skills.programmingLangs;
+
+console.log(skillLang);
+
+// let res = "";
+// for (let key in personalPlanPeter.skills.programmingLangs) {
+//   res += `Язык ${key}`;
+//   console.log(res);
+// }
+
+console.log(showProgrammingLangs(personalPlanPeter));
+
+console.log(personalPlanPeter.showAgeAndLangs());
