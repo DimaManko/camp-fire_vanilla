@@ -1,63 +1,102 @@
-// 3) Задача с собеседований. Напишите функцию reverse, которая принимает в себя строку и возвращает эту строку в обратном порядке.
+/* Задание на урок:
 
-// Пример:
+1) У нас уже есть рабочее приложение, состоящее из отдельных функций. Представьте, что
+перед вами стоит задача переписать его так, чтобы все функции стали методами объекта personalMovieDB
+Такое случается в реальных продуктах при смене технологий или подхода к архитектуре программы
 
-// const someString = 'This is some strange string';
+2) Создать метод toggleVisibleMyDB, который при вызове будет проверять свойство privat. Если оно false - он
+переключает его в true, если true - переключает в false. Протестировать вместе с showMyDB.
 
-// reverse(someString) => 'gnirts egnarts emos si sihT'
+3) В методе writeYourGenres запретить пользователю нажать кнопку "отмена" или оставлять пустую строку. 
+Если он это сделал - возвращать его к этому же вопросу. После того, как все жанры введены - 
+при помощи метода forEach вывести в консоль сообщения в таком виде:
+"Любимый жанр #(номер по порядку, начиная с 1) - это (название из массива)"*/
 
-// 4) Представьте такую реальную ситуацию. У вас есть банкомат, который выдает деньги из двух разных банков в разных валютах. Один банк основной с базовыми валютами, второй дополнительный с прочими валютами:
+"use strict";
 
-// const baseCurrencies = ['USD', 'EUR'];
-// const additionalCurrencies = ['UAH', 'RUB', 'CNY'];
+// Код возьмите из предыдущего домашнего задания
 
-// Вам нужно создать главную функцию банкомата availableCurr, которая принимает два аргумента: первый - это массив со всеми доступными валютами из двух банков сразу (сейчас представим, что они не могут повторяться), второй - необязательный аргумент, который указывает ту валюту, которая сейчас закончилась в банкомате. Если массив в первом аргументе пустой - то функция возвращает строку 'Нет доступных валют'. Функция возвращает строку в нужном виде.
+// let numberOfFilms;
 
-// Пример:
+// function start() {
+//   numberOfFilms = +prompt("Сколько фильмов вы уже посмотрели?");
 
-// availableCurr(['UAH', 'RUB', 'CNY'], 'CNY')
+//   while (
+//     numberOfFilms == "" ||
+//     numberOfFilms === null ||
+//     isNaN(numberOfFilms)
+//   ) {
+//     numberOfFilms = +prompt("Сколько фильмов вы уже посмотрели?");
+//   }
+// }
 
-// Вернет строку:
+// start();
 
-// Доступные валюты:
-// UAH
-// RUB
+const personalMovieDB = {
+  count: 0,
+  movies: {},
+  actors: {},
+  genres: [],
+  privat: false,
+  start() {
+    this.count = +prompt("Сколько фильмов вы уже посмотрели?");
 
-// Заметьте:
-
-// - CNY (юань) исчез из списка валют, значит такая валюта закончилась
-
-// - После валюты: стоит перенос строки \n, и после каждой валюты тоже. Это важно для тестов
-
-// - Данные для первого аргумента должны приходить сразу из двух банков, причем сначала baseCurrencies, потом additionalCurrencies по порядку
-
-const someString = "This is some strange string";
-
-function reverse(str) {
-  if (typeof str !== "string") {
-    return "Ошибка";
-  }
-  let arr = [];
-  for (let i = str.length; i >= 0; i--) {
-    arr.push(str[i]);
-  }
-  return arr.join("");
-}
-
-const baseCurrencies = ["USD", "EUR"];
-const additionalCurrencies = ["UAH", "RUB", "CNY"];
-
-function availableCurr(arr, missingCurr) {
-  let string = "Доступные валюты:\n";
-  if (arr.length === 0) {
-    return "Нет доступных валют";
-  }
-  for (const elem of arr) {
-    if (elem !== missingCurr) {
-      string += `${elem}\n`;
+    while (this.count == "" || this.count === null || isNaN(this.count)) {
+      this.count = +prompt("Сколько фильмов вы уже посмотрели?");
     }
-  }
-  return string.trim();
-}
+  },
+  rememberMyFilms() {
+    for (let i = 0; i < 2; i++) {
+      const a = prompt("Один из последних просмотренных фильмов?");
+      const b = +prompt("На сколько оцените его?");
+      if (a != "" && a != null && a.length < 50 && b != "" && b != null) {
+        this.movies[a] = b;
+        console.log("done");
+      } else {
+        i--;
+        console.log("error");
+      }
+    }
+  },
+  detectPersonalLevel() {
+    if (this.count < 10) {
+      alert("Просмотрено довольно мало фильмов");
+    } else if (this.count < 30) {
+      alert("Вы классический зритель");
+    } else if (this.count > 30) {
+      alert("Вы киноман");
+    } else {
+      alert("Произошла ошибка");
+    }
+  },
+  showMyDB() {
+    if (this.privat === false) {
+      console.log(personalMovieDB);
+    }
+  },
+  //   В методе writeYourGenres запретить пользователю нажать кнопку "отмена" или оставлять пустую строку.
+  // Если он это сделал - возвращать его к этому же вопросу. После того, как все жанры введены -
+  // при помощи метода forEach вывести в консоль сообщения в таком виде:
+  // "Любимый жанр #(номер по порядку, начиная с 1) - это (название из массива)"
+  writeYourGenres() {
+    for (let i = 1; i <= 3; i++) {
+      const a = prompt(`Ваш любимый жанр под номером ${i}`);
+      if (a != "" && a != null) {
+        this.genres.push(a);
+        console.log("done");
+      } else {
+        i--;
+        console.log("error");
+      }
+    }
+    this.genres.forEach((genre, index) => {
+      console.log(`Любимый жанр ${index + 1} - это ${genre}`);
+    });
+  },
+  toggleVisibleMyDB() {
+    this.privat = !this.privat;
+  },
+};
 
-console.log(availableCurr(["UAH", "RUB", "CNY"], "CNY"));
+personalMovieDB.writeYourGenres();
+console.log(personalMovieDB.genres);
