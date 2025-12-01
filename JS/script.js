@@ -1,102 +1,56 @@
-/* Задание на урок:
+// Написать функцию isBudgetEnough, которая буде возвращать строку. Если бюджета хватает для отопления всего объема торгового центра - выводится 'Бюджета достаточно', если нет - 'Бюджета недостаточно'
 
-1) У нас уже есть рабочее приложение, состоящее из отдельных функций. Представьте, что
-перед вами стоит задача переписать его так, чтобы все функции стали методами объекта personalMovieDB
-Такое случается в реальных продуктах при смене технологий или подхода к архитектуре программы
+// Но эта задача содержит несколько подзадач внутри:
 
-2) Создать метод toggleVisibleMyDB, который при вызове будет проверять свойство privat. Если оно false - он
-переключает его в true, если true - переключает в false. Протестировать вместе с showMyDB.
+// - вычисление общей площади всех магазинов, которая вычисляется как длина магазина, умноженная на его ширину;
 
-3) В методе writeYourGenres запретить пользователю нажать кнопку "отмена" или оставлять пустую строку. 
-Если он это сделал - возвращать его к этому же вопросу. После того, как все жанры введены - 
-при помощи метода forEach вывести в консоль сообщения в таком виде:
-"Любимый жанр #(номер по порядку, начиная с 1) - это (название из массива)"*/
+// - вычисление общего объема торгового центра, так как цена отопления указана в кубических метрах;
 
-"use strict";
+// - определение того, хватает ли бюджета на оплату такого объема;
 
-// Код возьмите из предыдущего домашнего задания
+// - все числа идут без единиц измерения для упрощения, просто цифры и все;
 
-// let numberOfFilms;
+// - функция должна продолжать работать, даже если изменяется количество магазинов, высота, бюджет или подставляется вообще другой объект
 
-// function start() {
-//   numberOfFilms = +prompt("Сколько фильмов вы уже посмотрели?");
-
-//   while (
-//     numberOfFilms == "" ||
-//     numberOfFilms === null ||
-//     isNaN(numberOfFilms)
-//   ) {
-//     numberOfFilms = +prompt("Сколько фильмов вы уже посмотрели?");
-//   }
-// }
-
-// start();
-
-const personalMovieDB = {
-  count: 0,
-  movies: {},
-  actors: {},
-  genres: [],
-  privat: false,
-  start() {
-    this.count = +prompt("Сколько фильмов вы уже посмотрели?");
-
-    while (this.count == "" || this.count === null || isNaN(this.count)) {
-      this.count = +prompt("Сколько фильмов вы уже посмотрели?");
-    }
-  },
-  rememberMyFilms() {
-    for (let i = 0; i < 2; i++) {
-      const a = prompt("Один из последних просмотренных фильмов?");
-      const b = +prompt("На сколько оцените его?");
-      if (a != "" && a != null && a.length < 50 && b != "" && b != null) {
-        this.movies[a] = b;
-        console.log("done");
-      } else {
-        i--;
-        console.log("error");
-      }
-    }
-  },
-  detectPersonalLevel() {
-    if (this.count < 10) {
-      alert("Просмотрено довольно мало фильмов");
-    } else if (this.count < 30) {
-      alert("Вы классический зритель");
-    } else if (this.count > 30) {
-      alert("Вы киноман");
-    } else {
-      alert("Произошла ошибка");
-    }
-  },
-  showMyDB() {
-    if (this.privat === false) {
-      console.log(personalMovieDB);
-    }
-  },
-  //   В методе writeYourGenres запретить пользователю нажать кнопку "отмена" или оставлять пустую строку.
-  // Если он это сделал - возвращать его к этому же вопросу. После того, как все жанры введены -
-  // при помощи метода forEach вывести в консоль сообщения в таком виде:
-  // "Любимый жанр #(номер по порядку, начиная с 1) - это (название из массива)"
-  writeYourGenres() {
-    for (let i = 1; i <= 3; i++) {
-      const a = prompt(`Ваш любимый жанр под номером ${i}`);
-      if (a != "" && a != null) {
-        this.genres.push(a);
-        console.log("done");
-      } else {
-        i--;
-        console.log("error");
-      }
-    }
-    this.genres.forEach((genre, index) => {
-      console.log(`Любимый жанр ${index + 1} - это ${genre}`);
-    });
-  },
-  toggleVisibleMyDB() {
-    this.privat = !this.privat;
-  },
+const shoppingMallData = {
+  shops: [
+    {
+      width: 10,
+      length: 5,
+    },
+    {
+      width: 15,
+      length: 7,
+    },
+    {
+      width: 20,
+      length: 5,
+    },
+    {
+      width: 8,
+      length: 10,
+    },
+  ],
+  height: 5,
+  moneyPer1m3: 30,
+  budget: 50000,
 };
 
-personalMovieDB.writeYourGenres();
-console.log(personalMovieDB.genres);
+function isBudgetEnough(data) {
+  let totalArea = 0;
+  for (let i = 0; i < data.shops.length; i++) {
+    totalArea += data.shops[i].length * data.shops[i].width * data.height;
+  }
+  console.log(totalArea);
+
+  const heatingCost = totalArea * data.moneyPer1m3;
+  console.log(heatingCost);
+
+  if (heatingCost <= data.budget) {
+    return "Бюджета достаточно";
+  } else {
+    return "Бюджета недостаточно";
+  }
+}
+
+console.log(isBudgetEnough(shoppingMallData));
