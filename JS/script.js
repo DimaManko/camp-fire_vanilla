@@ -1,56 +1,81 @@
-// Написать функцию isBudgetEnough, которая буде возвращать строку. Если бюджета хватает для отопления всего объема торгового центра - выводится 'Бюджета достаточно', если нет - 'Бюджета недостаточно'
+// У вас есть список учеников, которые хотят поиграть в игру:
 
-// Но эта задача содержит несколько подзадач внутри:
+// const students = ['Peter', 'Andrew', 'Ann', 'Mark', 'Josh', 'Sandra', 'Cris', 'Bernard', 'Takesi', 'Sam'];
 
-// - вычисление общей площади всех магазинов, которая вычисляется как длина магазина, умноженная на его ширину;
+// Но команд может быть только 3 по 3 человека. Напишите функцию sortStudentsByGroups, которая принимает в себя массив строк.
 
-// - вычисление общего объема торгового центра, так как цена отопления указана в кубических метрах;
+// Внутри она сначала сортирует имена по алфавиту. Затем распределяет учеников по 3 человека в 3 группы по алфавитному порядку. Эти группы должны быть массивами. Как итог, функция возвращает новый массив с тремя командами и строкой как 4й элемент.
 
-// - определение того, хватает ли бюджета на оплату такого объема;
+// Пример:
 
-// - все числа идут без единиц измерения для упрощения, просто цифры и все;
+// sortStudentsByGroups(students)  =>
 
-// - функция должна продолжать работать, даже если изменяется количество магазинов, высота, бюджет или подставляется вообще другой объект
+// [
+//   [ 'Andrew', 'Ann', 'Bernard' ],
+//   [ 'Cris', 'Josh', 'Mark' ],
+//   [ 'Peter', 'Sam', 'Sandra' ],
+//   'Оставшиеся студенты: Takesi'
+// ]
 
-const shoppingMallData = {
-  shops: [
-    {
-      width: 10,
-      length: 5,
-    },
-    {
-      width: 15,
-      length: 7,
-    },
-    {
-      width: 20,
-      length: 5,
-    },
-    {
-      width: 8,
-      length: 10,
-    },
-  ],
-  height: 5,
-  moneyPer1m3: 30,
-  budget: 50000,
-};
+// Если убрать одно студента из списка, то результат будет:
 
-function isBudgetEnough(data) {
-  let totalArea = 0;
-  for (let i = 0; i < data.shops.length; i++) {
-    totalArea += data.shops[i].length * data.shops[i].width * data.height;
-  }
-  console.log(totalArea);
+// [
+//   [ 'Andrew', 'Ann', 'Bernard' ],
+//   [ 'Cris', 'Josh', 'Mark' ],
+//   [ 'Peter', 'Sam', 'Sandra' ],
+//   'Оставшиеся студенты: -'
+// ]
 
-  const heatingCost = totalArea * data.moneyPer1m3;
-  console.log(heatingCost);
+// А если добавить одного, то:
 
-  if (heatingCost <= data.budget) {
-    return "Бюджета достаточно";
-  } else {
-    return "Бюджета недостаточно";
-  }
+// [
+//   [ 'Andrew', 'Ann', 'Bernard' ],
+//   [ 'Cris', 'Josh', 'Mark' ],
+//   [ 'Peter', 'Sam', 'Sandra' ],
+//   'Оставшиеся студенты: Takesi, Somebody'
+// ]
+
+// То есть, меняется содержимое строки. Все оставшиеся ученики попадают туда.
+
+const students = [
+  "Peter",
+  "Andrew",
+  "Ann",
+  "Mark",
+  "Josh",
+  "Sandra",
+  "Cris",
+  "Bernard",
+  "Takesi",
+  "Sam",
+];
+
+function sortStudentsByGroups(arr) {
+  let student = "Оставшиеся студенты:";
+  const resultArr = [];
+  const a = [];
+  b = [];
+  c = [];
+  stringArr = [];
+  arr.sort();
+  arr.forEach((element, index) => {
+    if (index < 3) {
+      a.push(element);
+    } else if (index < 6) {
+      b.push(element);
+    } else if (index < 9) {
+      c.push(element);
+    } else {
+      stringArr.push(element);
+    }
+  });
+  resultArr.push(
+    a,
+    b,
+    c,
+    `${student} ${stringArr.length === 0 ? "-" : stringArr.join(", ")}`
+  );
+  return resultArr;
 }
 
-console.log(isBudgetEnough(shoppingMallData));
+console.log(sortStudentsByGroups(students));
