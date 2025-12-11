@@ -29,4 +29,4 @@ function factorial(num) {
   }
 }
 
-console.log(factorial(3));
+console.log(factorial(5));
