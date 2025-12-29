@@ -1,32 +1,64 @@
-// Напишите функцию, которая вычисляет факториал.
-// Факториал  – это число, умноженное на "себя минус один", затем на "себя минус два", и так далее до 1. Факториал n обозначается как n!
+// Разница в днях
+// Вам необходимо реализовать функцию daysDiff, которая принимает две строки, которые содержат дату и время. Функция должна вернуть разницу между двумя датами в полных днях.
 
-// Отсюда мы можем понять, что функция должна принимать 1 аргумент, который будет являться числом. Будет неплохо, если вы на собеседовании сразу напишите проверку на приходящее значение :) Поэтому, если в нашу функцию приходит дробное число или не число  - возвращается строка с любым сообщением на ваше усмотрение. Если 0 и меньше - возвращается число 1.
+// Если какая-либо строка содержит некорректную дату, необходимо выбросить ошибку Error с сообщением Invalid date input: ДАТА.
 
-// Сам же факториал с примерами выглядит вот так:
+// Примечание:
+// Функция не должна ничего выводить.
+// Вызывать функцию не нужно, она будет вызвана самостоятельно.
+// Sample Input 1:
 
-// n! = n * (n - 1) * (n - 2) * ...*1 - это общая формула
+// {"dateStr1": "2025-01-01T00:00:00", "dateStr2": "2025-01-01T23:59:59"}
+// Sample Output 1:
 
-// Примеры значений для разных n:
+// 0
+// Sample Input 2:
 
-// 1! = 1
-// 2! = 2 * 1 = 2
-// 3! = 3 * 2 * 1 = 6
-// 4! = 4 * 3 * 2 * 1 = 24
-// 5! = 5 * 4 * 3 * 2 * 1 = 120
+// {"dateStr1": "2025-01-01", "dateStr2": "2025-01-02T25:00:00"}
+// Sample Output 2:
 
-// То есть, вызов нашей функции factorial(5) возвращает число 120
+// Invalid date input: 2025-01-02T25:00:00
+// Sample Input 3:
 
-// factorial(4) => 24
+// {"dateStr1": "2025-02-01T00:00:00", "dateStr2": "2025-02-02T00:00:00"}
+// Sample Output 3:
 
-function factorial(num) {
-  if (!Number.isInteger(num) || isNaN(num)) {
-    return `Неправильный результат. Введите число!`;
-  } else if (num <= 0) {
-    return 1;
-  } else {
-    return num * factorial(num - 1);
+// 1
+// Sample Input 4:
+
+// {"dateStr1": "2023-01-01", "dateStr2": "2024-01-01"}
+// Sample Output 4:
+
+// 365
+// Sample Input 5:
+
+// {"dateStr1": "2024-01-01", "dateStr2": "2025-01-01"}
+// Sample Output 5:
+
+// 366
+// Sample Input 6:
+
+// {"dateStr1": "2025-03-01", "dateStr2": "15 марта 2005"}
+// Sample Output 6:
+
+// Invalid date input: 15 марта 2005
+// Sample Input 7:
+
+// {"dateStr1": "начало времен", "dateStr2": "2025-01-02"}
+// Sample Output 7:
+
+// Invalid date input: начало времен
+
+function daysDiff(dateStr1, dateStr2) {
+  const stampDate1 = new Date(dateStr1);
+  const stampDate2 = new Date(dateStr2);
+  let result = 0;
+  if (isNaN(stampDate1.getDate())) {
+    throw new Error(`Invalid date input: ${dateStr1}`);
   }
+  if (isNaN(stampDate2.getDate())) {
+    throw new Error(`Invalid date input: ${dateStr2}`);
+  }
+  result = (stampDate2 - stampDate1) / 86400000;
+  return Math.trunc(result);
 }
-
-console.log(factorial(5));
