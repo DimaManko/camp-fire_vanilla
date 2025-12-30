@@ -1,21 +1,18 @@
-// JSON/try/catch
+// Парсинг JSON и reviver
+// На вход дается JSON-строка с объектом внутри, необходимо самостоятельно получить ее и распарсить.
+
+// Нас будет интересовать свойство date в объекте, оно хранит дату и время.
+
+// Вам необходимо с помощью reviver (второго аргумента функции JSON.parse) преобразовать строку в объект Date и вывести день месяца, который получится, если к свойству date прибавить 15 дней.
 function sumDate(data) {
-  try {
-    const arr = JSON.parse(data.toString());
-    let result = 0;
-    let count = 0;
-    for (const element of arr) {
-      if ("age" in element) {
-        result += element.age;
-        count++;
-      }
+  const date = JSON.parse(data, (key, value) => {
+    if (key === "date") {
+      const objDate = new Date(value);
+      const newDay = objDate.getDate() + 15;
+      const newDayObj = new Date(objDate.setDate(newDay));
+      console.log(newDayObj.getDate());
     }
-    if (count === 0) {
-      console.log("Ни один объект не содержит свойства age");
-    } else {
-      console.log(result / count);
-    }
-  } catch {
-    console.log(`Невалидный JSON`);
-  }
+  });
 }
+
+sumDate('{"date":"2027-11-27T10:10:10Z"}');
