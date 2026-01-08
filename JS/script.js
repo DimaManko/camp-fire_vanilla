@@ -1,25 +1,46 @@
-// Фильтрация и очистка данных
-// На вход подаётся массив целых чисел. Необходимо удалить из массива все нулевые значения и сохранить относительный порядок оставшихся элементов. После этого, в конец массива добавить столько нулей, чтобы итоговый массив имел ту же длину, что и исходный.
+// Отфильтрованные и важные требования:
 
-// Примечание:
-// Ожидается, что вы будете использовать методы массивов.
-// Решение должно работать корректно для массивов различной длины, включая пустые массивы и массивы, состоящие только из нулей.
+// Максимальный размер инвентаря задаётся параметром maxSize
+// Инвентарь ограничен, нельзя хранить больше предметов, чем maxSize.
 
-const arr = [1, 0, 3, 0, 5];
+// Если добавляемый предмет уже есть в инвентаре → увеличиваем его count, не добавляя дубликат.
 
-function filtr(arr) {
-  let countZero = 0;
-  arr.forEach((element, index) => {
-    if (element === 0) {
-      arr.splice(index, 1);
-      countZero++;
+// Если инвентарь не полон → новый предмет добавляется в конец.
+
+// Если инвентарь полон → удаляем самый старый предмет (первый в списке), затем добавляем новый предмет в конец.
+
+// Входные данные — JSON-объект вида:
+
+const data = `{
+  "inventory": [
+    {"name": "меч", "count": 1},
+    {"name": "щит", "count": 1},
+    {"name": "зелье", "count": 3},
+    {"name": "кольчуга", "count": 1}
+  ],
+  "newItem": {"name": "доспехи", "count": 1},
+  "maxSize": 4
+}`;
+const inventoryData = JSON.parse(data);
+function addInventory(inventoryData) {
+  const { inventory, newItem, maxSize } = inventoryData;
+  let checked = false;
+  for (let i = 0; i < inventory.length; i++) {
+    if (newItem.name === inventory[i].name) {
+      inventory[i].count += newItem.count;
+      checked = true;
+      break;
     }
-  });
-
-  for (let i = 0; i < countZero; i++) {
-    arr.push(0);
   }
-  console.log(arr);
+  if (!checked) {
+    if (inventory.length < maxSize) {
+      inventory.push(newItem);
+    } else {
+      inventory.shift();
+      inventory.push(newItem);
+    }
+  }
+  console.log(JSON.stringify(inventory));
 }
 
-filtr(arr);
+addInventory(inventoryData);
