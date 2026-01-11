@@ -1,27 +1,40 @@
-// Где спрятался последний?
-// Вам дается список задач (tasks), каждая задача имеет определённый приоритет: low, medium или high. Приоритеты расположены в порядке возрастания важности: low < medium < high.
+// Я найду тебя!
+// Во входящих данных вам дается объект, содержащий список комнат (rooms). Каждая комната имеет название (name) и массив людей (people), находящихся в ней. Каждый человек описан объектом с полями id и name.
 
-// Вам нужно вывести в консоль индекс последней задачи, приоритет которой равен или выше необходимого приоритета (targetPriority). Если такой задачи нет, значит выводим -1.
+// Также в объекте указаны два дополнительных поля:
+
+// targetRoom — название комнаты, в которой нужно искать
+// targetPerson — имя человека, которого нужно найти
+// Ваша задача — найти первого человека с именем targetPerson, который находится в комнате с названием targetRoom, и вывести его id в консоль. Если такого человека нет - необходимо вывести строку "Человек не найден".
 
 const data = `{
-  "tasks": [
-    { "title": "Полить кактус", "priority": "low" },
-    { "title": "Покормить золотую рыбку", "priority": "low" },
-    { "title": "Помахать коту", "priority": "low" }
+  "rooms": [
+    {
+      "name": "Парадная",
+      "people": [{ "id": 23, "name": "Павел" }, { "id": 42, "name": "Олег" }]
+    },
+    {
+      "name": "Зал",
+      "people": [{ "id": 22, "name": "Тимур" }, { "id": 123, "name": "Анна" }]
+    },
+    {
+      "name": "Туалет",
+      "people": [{ "id": 353, "name": "Лена" }]
+    }
   ],
-  "targetPriority": "medium"
+  "targetPerson": "Анна",
+  "targetRoom": "Зал"
 }`;
 
-function tasksPriority(data) {
-  const tasksObj = JSON.parse(data);
-  const { tasks, targetPriority } = tasksObj;
-  const priorityArr = ["low", "medium", "high"];
-  const prior = tasks.findLastIndex((task) => {
-    return (
-      priorityArr.indexOf(task.priority) >= priorityArr.indexOf(targetPriority)
-    );
-  });
-  console.log(prior);
+function findPersonOnRoom(data) {
+  const roomsObj = JSON.parse(data);
+  const { rooms, targetPerson, targetRoom } = roomsObj;
+  console.log(
+    rooms
+      .find((room) => room.name === targetRoom)
+      ?.people.find((person) => person.name === targetPerson)?.id ??
+      `Человек не найден`
+  );
 }
 
-tasksPriority(data);
+findPersonOnRoom(data);
