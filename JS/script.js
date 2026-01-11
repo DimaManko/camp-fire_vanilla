@@ -1,46 +1,47 @@
-// Отфильтрованные и важные требования:
+// Гонка сообщений
+// Вы разрабатываете систему логирования для веб-приложения. В какой-то момент вы заметили, что логи могут приходить в неправильном порядке. Это может привести к некорректной интерпретации событий, необходимо исправить это дело, однако, для начала нужно понять, действительно ли логи записываются не по порядку.
 
-// Максимальный размер инвентаря задаётся параметром maxSize
-// Инвентарь ограничен, нельзя хранить больше предметов, чем maxSize.
+// Вам на вход подается массив логов, каждый из которых содержит:
 
-// Если добавляемый предмет уже есть в инвентаре → увеличиваем его count, не добавляя дубликат.
+// id — уникальный идентификатор записи (число)
+// timestamp — время события в формате ISO 8601 (строка)
+// message — описание события (строка)
+// Ваша задача — с помощью метода every проверить, что все записи в массиве идут в хронологическом порядке (по возрастанию времени) и вывести в консоль true, в случае если все верно, иначе false.
 
-// Если инвентарь не полон → новый предмет добавляется в конец.
+function chckLog(data) {
+  const database = JSON.parse(data);
+  console.log(new Date(database[1].timestamp).getTime());
 
-// Если инвентарь полон → удаляем самый старый предмет (первый в списке), затем добавляем новый предмет в конец.
-
-// Входные данные — JSON-объект вида:
-
-const data = `{
-  "inventory": [
-    {"name": "меч", "count": 1},
-    {"name": "щит", "count": 1},
-    {"name": "зелье", "count": 3},
-    {"name": "кольчуга", "count": 1}
-  ],
-  "newItem": {"name": "доспехи", "count": 1},
-  "maxSize": 4
-}`;
-const inventoryData = JSON.parse(data);
-function addInventory(inventoryData) {
-  const { inventory, newItem, maxSize } = inventoryData;
-  let checked = false;
-  for (let i = 0; i < inventory.length; i++) {
-    if (newItem.name === inventory[i].name) {
-      inventory[i].count += newItem.count;
-      checked = true;
-      break;
-    }
-  }
-  if (!checked) {
-    if (inventory.length < maxSize) {
-      inventory.push(newItem);
-    } else {
-      inventory.shift();
-      inventory.push(newItem);
-    }
-  }
-  console.log(JSON.stringify(inventory));
+  let check = database.every((log, i, arr) => {
+    if (i === arr.length - 1) return true;
+    let time = new Date(log.timestamp).getTime();
+    let nextTime = new Date(arr[i + 1].timestamp).getTime();
+    return time < nextTime;
+  });
+  console.log(check);
 }
 
-addInventory(inventoryData);
+const data = `[
+  {
+    "id": 1001,
+    "timestamp": "2025-04-05T14:30:00.000Z",
+    "message": "Server started successfully"
+  },
+  {
+    "id": 1002,
+    "timestamp": "2025-04-05T14:30:05.000Z",
+    "message": "Database connection established"
+  },
+  {
+    "id": 1003,
+    "timestamp": "2025-04-05T14:30:12.000Z",
+    "message": "API endpoint /users initialized"
+  },
+  {
+    "id": 1004,
+    "timestamp": "2025-04-05T14:30:20.000Z",
+    "message": "Cache warmed up"
+  }
+]`;
+
+chckLog(data);
