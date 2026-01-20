@@ -1,3 +1,5 @@
+"use srtict";
+
 window.addEventListener("DOMContentLoaded", () => {
   // tabs
   const tabs = document.querySelectorAll(".tabheader__item"),
@@ -113,7 +115,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
   modalCloseBtn.addEventListener(
     "click",
-    closeModal
+    closeModal,
     // modal.classList.add("hide");
     // modal.classList.remove("show");
   );
@@ -143,4 +145,72 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 
   window.addEventListener("scroll", showModalByScroll);
+
+  // Классы: Меню на день
+
+  class MenuCards {
+    constructor(src, alt, subtittle, descr, price, parentSelector, ...classes) {
+      this.src = src;
+      this.alt = alt;
+      this.subtittle = subtittle;
+      this.descr = descr;
+      this.price = price;
+      this.parent = document.querySelector(parentSelector);
+      this.classes = classes;
+      this.transfer = 3;
+      this.shangeToBYN();
+    }
+
+    shangeToBYN() {
+      this.price = this.price * this.transfer;
+    }
+    showMenu() {
+      const div = document.createElement("div");
+
+      if (this.classes.length === 0) {
+        this.div = "menu__item";
+        div.classList.add(this.div);
+      }
+      this.classes.forEach((className) => {
+        div.classList.add(className);
+      });
+      div.innerHTML = `<img src=${this.src} alt=${this.alt}>
+                    <h3 class="menu__item-subtitle">${this.subtittle}"</h3>
+                    <div class="menu__item-descr">${this.descr}</div>
+                    <div class="menu__item-divider"></div>
+                    <div class="menu__item-price">
+                        <div class="menu__item-cost">Цена:</div>
+                        <div class="menu__item-total"><span>${this.price}</span> р/день</div>
+                    </div>`;
+      this.parent.append(div);
+    }
+  }
+  new MenuCards(
+    "img/tabs/vegy.jpg",
+    "vegy",
+    "Меню 'Фитнес'",
+    "Меню 'Фитнес' - это новый подход к приготовлению блюд: больше свежих овощей и фруктов. Продукт активных и здоровых людей. Это абсолютно новый продукт c оптимальной ценой и высоким качеством!",
+    10,
+    ".menu .container",
+  ).showMenu();
+
+  new MenuCards(
+    "img/tabs/post.jpg",
+    "post",
+    'Меню "Постное"',
+    "Меню “Постное” - это тщательный подбор ингредиентов: полное отсутствие продуктов животного происхождения, молоко из миндаля, овса, кокоса или гречки, правильное количество белков за счет тофу и импортных вегетарианских стейков.",
+    14,
+    ".menu .container",
+    "menu__item",
+  ).showMenu();
+
+  new MenuCards(
+    "img/tabs/elite.jpg",
+    "elite",
+    "Меню “Премиум”",
+    "В меню “Премиум” мы используем не только красивый дизайн упаковки, но и качественное исполнение блюд. Красная рыба, морепродукты, фрукты - ресторанное меню без похода в ресторан!",
+    9,
+    ".menu .container",
+    "menu__item",
+  ).showMenu();
 });
