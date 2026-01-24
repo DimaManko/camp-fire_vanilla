@@ -1,41 +1,48 @@
-// Фильтрация и преобразование массива студентов
-// Вам подается массив объектов, представляющих студентов. Каждый объект содержит поля name (имя студента) и score (числовой балл).
+// Фильтрация продуктов с зависимостями
+// Вам на вход подается объект, содержащий список продуктов (products) и массив разрешённых тегов (allowedTags). Необходимо отфильтровать продукты по следующим правилам:
 
-// Вам нужно выполнить следующие действия:
+// Продукт должен быть в наличии (свойство inStock должно содержать true).
+// Все теги продукта должны присутствовать в списке разрешённых тегов (allowedTags).
+// В результате, необходимо вывести получившийся массив с названиями продуктов.
 
-// Отфильтровать массив, оставив только студентов, которые набрали больше 50 баллов.
-// Преобразовать оставшиеся объекты в новый массив, где:
-// Свойство name остаётся без изменений.
-// Свойство score удалено.
-// Добавлено свойство grade, со значением A, если score был больше или равен 90, если score был меньше, то значение должно быть B.
-// Выведите полученный массив в виде JSON строки.
+// Примечание:
+// Что если бы вам сказали: "Слушай, список разрешенных тегов может быть очень большой в будущем". Повлияет ли эта информация как-либо на ваше решение?
 // Sample Input 1:
 
-// [
-//   { "name": "Аня", "score": 95 },
-//   { "name": "Петя", "score": 45 },
-//   { "name": "Саша", "score": 85 },
-//   { "name": "Лена", "score": 92 }
-// ]
+// {
+//   "allowedTags": ["электроника", "гаджеты", "мобильные"],
+//   "products": [
+//     { "name": "Айфон 15", "tags": ["мобильные", "электроника"], "inStock": true },
+//     { "name": "Ноутбук Lenovo", "tags": ["электроника", "компьютеры"], "inStock": true },
+//     { "name": "Умные часы", "tags": ["гаджеты", "электроника"], "inStock": false },
+//     { "name": "Планшет Samsung", "tags": ["мобильные", "гаджеты"], "inStock": true }
+//   ]
+// }
 // Sample Output 1:
 
-// [{"name":"Аня","grade":"A"},{"name":"Саша","grade":"B"},{"name":"Лена","grade":"A"}]
+// [ 'Айфон 15', 'Планшет Samsung' ]
 
-const data = `[
-  { "name": "Аня", "score": 95 },
-  { "name": "Петя", "score": 45 },
-  { "name": "Саша", "score": 85 },
-  { "name": "Лена", "score": 92 }
-]`;
+const data = `{"allowedTags": ["электроника", "гаджеты", "мобильные"],
+  "products": [
+    { "name": "Айфон 15", "tags": ["мобильные", "электроника"], "inStock": true },
+    { "name": "Ноутбук Lenovo", "tags": ["электроника", "компьютеры"], "inStock": true },
+    { "name": "Умные часы", "tags": ["гаджеты", "электроника"], "inStock": false },
+    { "name": "Планшет Samsung", "tags": ["мобильные", "гаджеты"], "inStock": true }
+  ]
+}`;
 
-const students = JSON.parse(data);
+let product = JSON.parse(data);
+let { allowedTags, products } = product;
 
-let studentsScoreHight = students
-  .filter((student) => student.score > 50)
-  .map((student) => {
-    student.grade = student.score >= 90 ? "A" : "B";
-    delete student.score;
-    return student;
-  });
-console.log(studentsScoreHight);
-console.log(JSON.stringify(studentsScoreHight));
+function filterProd(products, tags) {
+  let arr = products
+    .filter(
+      (product) =>
+        product.inStock &&
+        product.tags.every((tag) => allowedTags.includes(tag)),
+    )
+    .map((product) => product.name);
+  return arr;
+}
+
+console.log(filterProd(products, allowedTags));
