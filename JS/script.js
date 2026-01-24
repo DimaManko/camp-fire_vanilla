@@ -1,40 +1,41 @@
-// Я найду тебя!
-// Во входящих данных вам дается объект, содержащий список комнат (rooms). Каждая комната имеет название (name) и массив людей (people), находящихся в ней. Каждый человек описан объектом с полями id и name.
+// Фильтрация и преобразование массива студентов
+// Вам подается массив объектов, представляющих студентов. Каждый объект содержит поля name (имя студента) и score (числовой балл).
 
-// Также в объекте указаны два дополнительных поля:
+// Вам нужно выполнить следующие действия:
 
-// targetRoom — название комнаты, в которой нужно искать
-// targetPerson — имя человека, которого нужно найти
-// Ваша задача — найти первого человека с именем targetPerson, который находится в комнате с названием targetRoom, и вывести его id в консоль. Если такого человека нет - необходимо вывести строку "Человек не найден".
+// Отфильтровать массив, оставив только студентов, которые набрали больше 50 баллов.
+// Преобразовать оставшиеся объекты в новый массив, где:
+// Свойство name остаётся без изменений.
+// Свойство score удалено.
+// Добавлено свойство grade, со значением A, если score был больше или равен 90, если score был меньше, то значение должно быть B.
+// Выведите полученный массив в виде JSON строки.
+// Sample Input 1:
 
-const data = `{
-  "rooms": [
-    {
-      "name": "Парадная",
-      "people": [{ "id": 23, "name": "Павел" }, { "id": 42, "name": "Олег" }]
-    },
-    {
-      "name": "Зал",
-      "people": [{ "id": 22, "name": "Тимур" }, { "id": 123, "name": "Анна" }]
-    },
-    {
-      "name": "Туалет",
-      "people": [{ "id": 353, "name": "Лена" }]
-    }
-  ],
-  "targetPerson": "Анна",
-  "targetRoom": "Зал"
-}`;
+// [
+//   { "name": "Аня", "score": 95 },
+//   { "name": "Петя", "score": 45 },
+//   { "name": "Саша", "score": 85 },
+//   { "name": "Лена", "score": 92 }
+// ]
+// Sample Output 1:
 
-function findPersonOnRoom(data) {
-  const roomsObj = JSON.parse(data);
-  const { rooms, targetPerson, targetRoom } = roomsObj;
-  console.log(
-    rooms
-      .find((room) => room.name === targetRoom)
-      ?.people.find((person) => person.name === targetPerson)?.id ??
-      `Человек не найден`
-  );
-}
+// [{"name":"Аня","grade":"A"},{"name":"Саша","grade":"B"},{"name":"Лена","grade":"A"}]
 
-findPersonOnRoom(data);
+const data = `[
+  { "name": "Аня", "score": 95 },
+  { "name": "Петя", "score": 45 },
+  { "name": "Саша", "score": 85 },
+  { "name": "Лена", "score": 92 }
+]`;
+
+const students = JSON.parse(data);
+
+let studentsScoreHight = students
+  .filter((student) => student.score > 50)
+  .map((student) => {
+    student.grade = student.score >= 90 ? "A" : "B";
+    delete student.score;
+    return student;
+  });
+console.log(studentsScoreHight);
+console.log(JSON.stringify(studentsScoreHight));
