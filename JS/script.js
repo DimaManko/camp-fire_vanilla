@@ -1,24 +1,35 @@
-// Общая стоимость корзины с учетом скидки
-// Вам на вход подается массив товаров в корзине, необходимо вывести общую стоимость корзины с учётом скидок. У каждого товара может быть указана скидка в виде десятичной дроби (например, 0.1 — это 10% скидка). Если скидка равна 0, то она не применяется.
+// Анализируем логи
+// Вы работаете с логами сервера. Каждый лог представляет собой объект с двумя полями:
 
-// Каждый товар представлен объектом со следующими полями:
+// endpoint — строка, путь к API-эндпоинту.
+// status — целое число, HTTP-статус ответа.
+// Вам подается массив таких логов, необходимо вывести в консоль объект в формате JSON, в котором по каждому endpoint подсчитано количество успешных и неуспешных запросов.
 
-// name — название товара (строка),
-// price — цена товара (число),
-// discount — скидка на товар (число от 0 до 1).
+// Успешным запросом является любой статус в диапазоне 200–299, а неуспешным — любой другой статус (например, 4xx, 5xx и т.п.).
+
+// Подсказка:
+// Как отмечалось, формат вывода - JSON, можно использовать JSON.stringify(), однако, для правильного формата необходимо будет этой функции дать дополнительные аргументы, помимо самого объекта, который необходимо вывести.
 
 const data = `[
-  { "name": "Телефон", "price": 30000, "discount": 0.1 },
-  { "name": "Чехол", "price": 1000, "discount": 0 },
-  { "name": "Наушники", "price": 5000, "discount": 0.2 }
+  { "endpoint": "/api/cart", "status": 200 },
+  { "endpoint": "/api/cart", "status": 403 },
+  { "endpoint": "/api/checkout", "status": 502 },
+  { "endpoint": "/api/checkout", "status": 200 },
+  { "endpoint": "/api/cart", "status": 200 }
 ]`;
-// 0
-function amountWithDiscount(data) {
-  const goods = JSON.parse(data);
-  const amount = goods.reduce((acc, good) => {
-    return acc + good.price * (1 - good.discount);
-  }, 0);
-  return amount;
+
+function checkLog(data) {
+  const log = JSON.parse(data);
+  const check = log.reduce((acc, point) => {
+    if (!acc[point.endpoint]) {
+      acc[point.endpoint] = { success: 0, error: 0 };
+    }
+    point.status >= 200 && point.status < 300
+      ? (acc[point.endpoint].success += 1)
+      : (acc[point.endpoint].error += 1);
+    return acc;
+  }, {});
+  console.log(JSON.stringify(check));
 }
 
-amountWithDiscount(data);
+checkLog(data);
