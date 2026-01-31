@@ -1,36 +1,24 @@
-"use strict";
+// Общая стоимость корзины с учетом скидки
+// Вам на вход подается массив товаров в корзине, необходимо вывести общую стоимость корзины с учётом скидок. У каждого товара может быть указана скидка в виде десятичной дроби (например, 0.1 — это 10% скидка). Если скидка равна 0, то она не применяется.
 
-// 1) У вас есть небольшой массив с данными о доходах каждой торговой точки. Напишите функцию getPositiveIncomeAmount, которая принимает этот массив данных и возвращает сумму только положительных значений из каждого объекта. (число)
+// Каждый товар представлен объектом со следующими полями:
 
-// Пример:
+// name — название товара (строка),
+// price — цена товара (число),
+// discount — скидка на товар (число от 0 до 1).
 
-// getPositiveIncomeAmount(funds) => 13300
+const data = `[
+  { "name": "Телефон", "price": 30000, "discount": 0.1 },
+  { "name": "Чехол", "price": 1000, "discount": 0 },
+  { "name": "Наушники", "price": 5000, "discount": 0.2 }
+]`;
+// 0
+function amountWithDiscount(data) {
+  const goods = JSON.parse(data);
+  const amount = goods.reduce((acc, good) => {
+    return acc + good.price * (1 - good.discount);
+  }, 0);
+  return amount;
+}
 
-// 2) Напишите функцию getTotalIncomeAmount, которая тоже принимает этот массив данных. Если хотя бы один из объектов содержит отрицательное значение поля amount, то функция возвращает сумму всех значений. (число) Если таких значений нет - запускается функция getPositiveIncomeAmount с тем же массивом данных.
-
-// Пример:
-
-// getTotalIncomeAmount(funds) => -500
-
-const funds = [
-  { amount: -1400 },
-  { amount: 2400 },
-  { amount: -1000 },
-  { amount: 500 },
-  { amount: 10400 },
-  { amount: -11400 },
-];
-
-const getPositiveIncomeAmount = (data) => {
-  return data
-    .filter((obj) => obj.amount > 0)
-    .reduce((sum, obj) => sum + obj.amount, 0);
-};
-
-const getTotalIncomeAmount = (data) => {
-  return data.some((obj) => obj.amount < 0)
-    ? data.reduce((sum, obj) => sum + obj.amount, 0)
-    : getPositiveIncomeAmount(data);
-};
-
-console.log(getTotalIncomeAmount(funds));
+amountWithDiscount(data);
