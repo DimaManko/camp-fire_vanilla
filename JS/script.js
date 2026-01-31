@@ -1,51 +1,59 @@
-// Сортировка категорий и подкатегорий
-// Вам необходимо реализовать функцию sortCategories(categories), которая принимает массив объектов, представляющих категории товаров. Каждая категория имеет имя (name) и список подкатегорий (subcategories). Каждая подкатегория тоже содержит имя (name) и уровень популярности (popularity).
+// 1) У вас есть список фильмов с рейтингом в виде массива объектов. Напишите функцию showGoodFilms, которая будет принимать этот массив, а возвращать будет массив объектов только с теми фильмами, у которых рейтинг больше или равен 8.
 
-// Необходимо из функции вернуть полностью новый массив, с новыми объектами внутри. При этом, необходимо отсортировать категории по имени в алфавитном порядке (по возрастанию), а внутри каждой категории отсортировать подкатегории по популярности в порядке убывания. Исходный массив должен остаться без изменений.
+// 2) Напишите функцию showListOfFilms, которая будет принимать этот же массив, а возвращать будет строку, которая содержит названия фильмов через запятую.
 
-// Примечание:
-// Обратите внимание, что вам необходимо оставить переданный в функцию массив без изменений. Проверяться это не будет, но вам за это потом отвечать ;)
-// Учтите, что некоторые категории могут не иметь подкатегорий, однако такие категории тоже должны присутствовать в результате.
+// Пример:
 
-function sortCategories(categories) {
-  let arr = categories.concat();
-  arr.forEach((category) => {
-    category.subcategories.sort((a, b) => {
-      return b.popularity - a.popularity;
-    });
-  });
-  arr.sort((a, b) => {
-    return a.name.localeCompare(b.name);
-  });
+// showListOfFilms(films) => "Titanic, Die hard 5, Matrix, Some bad film"
 
-  return arr;
+// 3) Напишите функцию setFilmsIds, которая будет принимать этот же массив, а возвращать будет такой же массив с фильмами, но у каждого фильма будет новое поле id. Значение этого поля установите по нумерации фильма.
+
+// Пример:
+
+// setFilmsIds(films)  => [   { name: 'Titanic', rating: 9, id: 0 },   { name: 'Die hard 5', rating: 5, id: 1 },   { name: 'Matrix', rating: 8, id: 2 },   { name: 'Some bad film', rating: 4, id: 3 } ]
+
+// 4) Запишите результат предыдущей функции в переменную tranformedArray. Напишите функцию checkFilms, которая будет проверять, что в каждом из фильмов есть поле id. Если это так - функция возвращает true. Очевидно, что сейчас условие должно выполняться, если мы передаем checkFilms(tranformedArray); :)
+
+const films = [
+  {
+    name: "Titanic",
+    rating: 9,
+  },
+  {
+    name: "Die hard 5",
+    rating: 5,
+  },
+  {
+    name: "Matrix",
+    rating: 8,
+  },
+  {
+    name: "Some bad film",
+    rating: 4,
+  },
+];
+
+function showGoodFilms(arr) {
+  return arr.filter((film) => film.rating >= 8);
 }
 
-sortCategories([
-  {
-    name: "Электроника",
-    subcategories: [
-      { name: "Смартфоны", popularity: 95 },
-      { name: "Ноутбуки", popularity: 87 },
-      { name: "Планшеты", popularity: 65 },
-    ],
-  },
-  {
-    name: "Одежда",
-    subcategories: [
-      { name: "Футболки", popularity: 92 },
-      { name: "Джинсы", popularity: 88 },
-    ],
-  },
-  {
-    name: "Книги",
-    subcategories: [],
-  },
-  {
-    name: "Автотовары",
-    subcategories: [
-      { name: "Шины", popularity: 78 },
-      { name: "Аккумуляторы", popularity: 82 },
-    ],
-  },
-]);
+function showListOfFilms(arr) {
+  return arr.reduce(
+    (acc, curr) => `${typeof acc === "object" ? acc.name : acc}, ${curr.name}`,
+  );
+}
+
+function setFilmsIds(arr) {
+  return arr.map((film, index) => {
+    film.id = index;
+    return film;
+  });
+}
+
+const tranformedArray = setFilmsIds(films);
+
+function checkFilms(arr) {
+  return arr.every((film) => film.id || film.id === 0);
+}
+
+console.log(showListOfFilms(films));
