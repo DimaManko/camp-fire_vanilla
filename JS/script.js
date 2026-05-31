@@ -1,36 +1,26 @@
-// Вам на вход подается массив объектов, представляющих инопланетян, каждый из которых имеет имя и уровень IQ.
+function printMyProfile(accessToken) {
+  const xhl = new XMLHttpRequest();
+  xhl.open("GET", "https://clothapi.progskill.ru/v1/users/me");
+  xhl.setRequestHeader("Authorization", `Bearer ${accessToken}`);
+  xhl.addEventListener("load", () => {
+    if (xhl.status === 200) {
+      const data = JSON.parse(xhl.responseText);
+      console.log(
+        `Полное имя: ${data.first_name} ${data.last_name}, Роль: ${data.role}. `,
+      );
+    } else if (xhl.status === 401) {
+      console.log("Ошибка: Неверный или отсутствующий токен.");
+    } else {
+      console.log("Ошибка: Не удалось получить данные пользователя.");
+    }
 
-// Ваша задача - отсортировать список по убыванию IQ инопланетян и вывести его с их порядковым номером и значением IQ, используя метод массива .entries() в цикле for.
-
-// Используйте следующий формат вывода:
-
-// [номер]: [имя] (IQ: [iq])
-
-// Sample Input 1:
-
-// [
-//   { "name": "Капитан Керн", "iq": 150 },
-//   { "name": "Глорибас", "iq": 120 },
-//   { "name": "Танос", "iq": 200 }
-// ]
-// Sample Output 1:
-
-// 1: Танос (IQ: 200)
-// 2: Капитан Керн (IQ: 150)
-// 3: Глорибас (IQ: 120)
-
-const data = `[
-  { "name": "Капитан Керн", "iq": 150 },
-  { "name": "Глорибас", "iq": 120 },
-  { "name": "Танос", "iq": 200 }
-]`;
-
-function sortIqNlo(data) {
-  const nlo = JSON.parse(data);
-  const sortNlo = nlo.sort((a, b) => b.iq - a.iq);
-  for (const [idx, persone] of sortNlo.entries()) {
-    console.log(`${idx + 1}. ${persone.name} (IQ: ${persone.iq})`);
-  }
+    xhl.addEventListener("error", () => {
+      console.log("Сетевая ошибка: Не удалось получить данные пользователя.");
+    });
+  });
+  xhl.send();
 }
 
-sortIqNlo(data);
+printMyProfile(
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3ODAyNDQ0MjYsImlhdCI6MTc4MDI0MjYyNiwicm9sZSI6IkFETUlOIiwic3ViIjoiYjVhYmZjZDEtM2MwMy00ZTA2LWEyZGEtZGU1ZTkxMDkyMmQyIn0.Rvah34FlbHqVKKE7baVQ6XfgAgJaasS4B9SdzdbwZ9g",
+);
