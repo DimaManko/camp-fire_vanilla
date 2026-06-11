@@ -1,48 +1,36 @@
-function getFilteredProducts(filters, callback) {
-  const xhr = new XMLHttpRequest();
-  let _baseUrl = new URL("https://clothapi.progskill.ru/v1/products");
-  for (const [key, value] of Object.entries(filters)) {
-    _baseUrl.searchParams.append(`${key}`, `${value}`);
-  }
-  xhr.addEventListener("load", () => {
-    if (xhr.status === 200) {
-      try {
-        const data = JSON.parse(xhr.responseText);
-        callback(data.data);
-      } catch {
-        callback(new Error("Не удалось распарсить ответ сервера"));
-      }
-    } else if (xhr.status === 422) {
-      callback(new Error("Некорректные параметры запроса"));
-    } else if (xhr.status === 400) {
-      callback(new Error("Ошибка при валидации запроса"));
-    } else {
-      callback(new Error("Неизвестная ошибка"));
-    }
-  });
-
-  xhr.addEventListener("error", (e) => {
-    callback(new Error("Сетевая ошибка"));
-  });
-
-  xhr.open("GET", _baseUrl);
-  xhr.send();
-}
-
-function displayProducts(products) {
-  // Проверяем, если получили ошибку, выводим сообщение:
-  if (products instanceof Error) {
-    console.log(
-      `Ошибка при попытке получить список товаров: ${products.message}`,
+async function getProductDetails(productId) {
+  try {
+    const response = await fetch(
+      `https://clothapi.progskill.ru/v1/products/${productId}`,
     );
-    return;
+    if (!response.ok) {
+      throw new Error(`Неверный статус ответа: ${response.status}`);
+    }
+    const data = await response.json();
+    const [brandResponse, categoryId] = await Promise.all([
+      fetch(`https://clothapi.progskill.ru/v1/brands/${data.brand_id}`),
+      fetch(`https://clothapi.progskill.ru/v1/categories/${data.category_id}`),
+    ]);
+
+    const brandData = await brandResponse.json();
+    const categoriesData = await categoryId.json();
+
+    console.log(
+      `Название товара: ${data.name || `Не удалось загрузить информацию`}`,
+    );
+    console.log(`Цена: ${data.price || `Не удалось загрузить информацию`}`);
+    console.log(
+      `Категория: ${categoriesData.name || `Не удалось загрузить информацию`}`,
+    );
+    console.log(
+      `Бренд: ${brandData.name || `Не удалось загрузить информацию`}`,
+    );
+    console.log(
+      `Описание: ${data.description || `Не удалось загрузить информацию`}`,
+    );
+  } catch (error) {
+    console.log(error);
   }
-  // Если получили не ошибку, значит, запрос был успешным, выводим товары:
-  products.forEach((product) => {
-    console.log(`Название: ${product.name}, Цена: ${product.price}`);
-  });
 }
 
-const filters = { min_price: 300000, max_price: 500000 };
-// Вызов вашей функции, передаем список фильтров и callback-функцию.
-getFilteredProducts(filters, displayProducts);
+getProductDetails("3df43a13-a4b4-4ed6-bfa0-10ed1d741bac");
