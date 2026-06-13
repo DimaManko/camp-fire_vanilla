@@ -33,7 +33,10 @@ async function getCategoryPriceAnalysis() {
 
       if (totalPage > 1 && countAnalyze > arrProd.length) {
         const pagePromises = [];
-        for (let page = 2; page <= totalPage; page++) {
+        const pageNeeded = Math.ceil(countAnalyze / data.data.length);
+        console.log(pageNeeded);
+
+        for (let page = 2; page <= pageNeeded; page++) {
           const url = new URL("https://clothapi.progskill.ru/v1/products");
           url.searchParams.append("category_id", category.id);
           url.searchParams.append("min_stock", "1");
@@ -85,7 +88,7 @@ async function getCategoryPriceAnalysis() {
 
     return dataAnalyze;
   } catch (error) {
-    return Promise.reject(error.message);
+    return Promise.reject(error);
   }
 }
 getCategoryPriceAnalysis()
